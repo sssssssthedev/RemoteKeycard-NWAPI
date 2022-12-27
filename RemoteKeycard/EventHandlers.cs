@@ -93,11 +93,7 @@ namespace RemoteKeycard
                 foreach (var item in player.ReferenceHub.inventory.UserInventory.Items.Values)
                 {
                     if (!(item is KeycardItem keycardItem)) continue;
-                    var checkPermsMethod = locker.GetType()
-                        .GetMethod("CheckPerms", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (!player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) ||
-                        checkPermsMethod?.Invoke(locker,
-                            new object[] {keycardItem.Permissions, player.ReferenceHub}) == null) continue;
+                    if (!player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) ||keycardItem.Permissions.HasFlagFast(locker.Chambers[colliderId].RequiredPermissions)) continue;
                     locker.Chambers[colliderId].SetDoor(!locker.Chambers[colliderId].IsOpen,
                         locker.GetFieldValue<AudioClip>("_grantedBeep"));
                     var refreshOpenedSyncVarMethod = locker.GetType().GetMethod("RefreshOpenedSyncvar",

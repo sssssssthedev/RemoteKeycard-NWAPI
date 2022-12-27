@@ -7,7 +7,7 @@ namespace RemoteKeycard
     public class RemoteKeycard
     {
         
-        public static RemoteKeycard Instance { get; set; }
+        public static RemoteKeycard Instance { get; private set; }
 
         [PluginConfig("config.yml")] public Config Config;
 
