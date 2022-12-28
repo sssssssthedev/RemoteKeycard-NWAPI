@@ -12,7 +12,7 @@ namespace RemoteKeycard
         [PluginConfig("config.yml")] public Config Config;
 
         [PluginPriority(LoadPriority.Highest)]
-        [PluginEntryPoint("RemoteKeycard", "1.0.0", "Remote Keycard", "sssssssthedev")]
+        [PluginEntryPoint("RemoteKeycard", "1.0.1", "Remote Keycard", "sssssssthedev")]
         public void LoadPlugin()
         {
             Instance = this;
