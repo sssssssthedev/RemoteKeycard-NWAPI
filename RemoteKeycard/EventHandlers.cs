@@ -18,14 +18,20 @@ namespace RemoteKeycard
         [PluginEvent(ServerEventType.PlayerInteractDoor)]
         public void OnDoorInteract(Player player, DoorVariant door, bool canOpen)
         {
+            // Loads the blacklisted doors
             SetupBlacklistedDoors();
+            // Returns if the config option for affecting doors is set to false
             if (!RemoteKeycard.Instance.Config.AffectDoors) return;
+            // Returns on any blacklisted doors it finds, this is done to prevent the method from running on doors that are not supposed to be affected
             if (DoorsUtils.GetBlacklistedDoors().Any(blacklistedDoor => door.name.StartsWith(blacklistedDoor))) return;
+            // Returns if the player has a keycard in their hands
             if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return;
             try
             {
+                // Does a for each on the player's inventory to find the keycard
                 foreach (var keycardItem in player.ReferenceHub.inventory.UserInventory.Items.Values)
                 {
+                    // If the keycard exists in the player's inventory and the door permissions match the keycard, open the door
                     if (player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) &&
                         door.RequiredPermissions.CheckPermissions(keycardItem, player.ReferenceHub))
                     {
@@ -83,22 +89,31 @@ namespace RemoteKeycard
         [PluginEvent(ServerEventType.PlayerInteractLocker)]
         public void OnLockerInteract(Player player, Locker locker, byte colliderId, bool canOpen)
         {
+            // Loads the blacklisted lockers
             SetupBlacklistedLockers();
+            // Returns if the config option for affecting lockers is set to false
             if (!RemoteKeycard.Instance.Config.AffectScpLockers) return;
+            // Returns if the player has a keycard in their hands
             if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return;
+            // Returns if the locker is a pedestal, still can't find any way of making it work
             if (locker is PedestalScpLocker) return;
+            // Returns on any blacklisted lockers it finds, this is done to prevent the method from running on lockers that are not supposed to be affected
             if (LockerUtils.GetBlacklistedLockers().Any(blacklistedLocker => locker.name.Contains(blacklistedLocker))) return;
             try
             {
+                // Does a for each on the player's inventory to find the keycard
                 foreach (var item in player.ReferenceHub.inventory.UserInventory.Items.Values)
                 {
-                    if (!(item is KeycardItem keycardItem)) continue;
-                    if (!player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) ||keycardItem.Permissions.HasFlagFast(locker.Chambers[colliderId].RequiredPermissions)) continue;
-                    locker.Chambers[colliderId].SetDoor(!locker.Chambers[colliderId].IsOpen,
-                        locker.GetFieldValue<AudioClip>("_grantedBeep"));
-                    var refreshOpenedSyncVarMethod = locker.GetType().GetMethod("RefreshOpenedSyncvar",
-                        BindingFlags.NonPublic | BindingFlags.Instance);
-                    refreshOpenedSyncVarMethod?.Invoke(locker, null);
+                    // Checks if the item matches the keycard, this is done to prevent casting another item to the keycard item, which makes it impossible to open the locker if there are more items in the player's inventory
+                    if (item is KeycardItem keycardItem) {
+                        // If the player has a keycard in their inventory and the locker permissions match the keycard, open the locker
+                        if (player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) ||
+                            keycardItem.Permissions.HasFlagFast(locker.Chambers[colliderId].RequiredPermissions))
+                        {
+                            locker.Chambers[colliderId].SetDoor(!locker.Chambers[colliderId].IsOpen, locker._grantedBeep);
+                            locker.RefreshOpenedSyncvar();
+                        }
+                    }
                 }
             }
             catch (Exception e)
@@ -152,15 +167,6 @@ namespace RemoteKeycard
         public static void AddBlacklistedLocker(string lockerName)
         {
             BlacklistedLockers.Add(lockerName);
-        }
-    }
-
-    public static class ReflectionExtensions {
-        public static T GetFieldValue<T>(this object obj, string name) {
-            // Set the flags so that private and public fields from instances will be found
-            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-            var field = obj.GetType().GetField(name, bindingFlags);
-            return (T)field?.GetValue(obj);
         }
     }
 }

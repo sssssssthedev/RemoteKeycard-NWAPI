@@ -34,7 +34,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Assembly-CSharp">
-          <HintPath>..\..\..\Desktop\SCPPublicBetaReferences\Assembly-CSharp.dll</HintPath>
+          <HintPath>..\..\..\Desktop\SCPPublicBetaSourceReferences\Assembly-CSharp-Publicized.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass">
           <HintPath>..\..\..\Desktop\SCPPublicBetaReferences\Assembly-CSharp-firstpass.dll</HintPath>
