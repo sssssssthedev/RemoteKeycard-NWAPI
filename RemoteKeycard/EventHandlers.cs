@@ -107,7 +107,7 @@ namespace RemoteKeycard
                     // Checks if the item matches the keycard, this is done to prevent casting another item to the keycard item, which makes it impossible to open the locker if there are more items in the player's inventory
                     if (item is KeycardItem keycardItem) {
                         // If the player has a keycard in their inventory and the locker permissions match the keycard, open the locker
-                        if (player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) ||
+                        if (player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) &&
                             keycardItem.Permissions.HasFlagFast(locker.Chambers[colliderId].RequiredPermissions))
                         {
                             locker.Chambers[colliderId].SetDoor(!locker.Chambers[colliderId].IsOpen, locker._grantedBeep);
@@ -139,7 +139,7 @@ namespace RemoteKeycard
             LockerUtils.AddBlacklistedLocker("Medkit");
         }
     }
-    
+
     public static class DoorsUtils
     {
         private static readonly List<string> BlacklistedDoors = new List<string>();
