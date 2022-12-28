@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items.Keycards;
 using MapGeneration.Distributors;
 using PluginAPI.Core;
 using PluginAPI.Core.Attributes;
 using PluginAPI.Enums;
-using UnityEngine;
 
 namespace RemoteKeycard
 {
@@ -16,16 +14,16 @@ namespace RemoteKeycard
     {
         
         [PluginEvent(ServerEventType.PlayerInteractDoor)]
-        public void OnDoorInteract(Player player, DoorVariant door, bool canOpen)
+        public bool OnDoorInteract(Player player, DoorVariant door, bool canOpen)
         {
             // Loads the blacklisted doors
             SetupBlacklistedDoors();
             // Returns if the config option for affecting doors is set to false
-            if (!RemoteKeycard.Instance.Config.AffectDoors) return;
+            if (!RemoteKeycard.Instance.Config.AffectDoors) return true;
             // Returns on any blacklisted doors it finds, this is done to prevent the method from running on doors that are not supposed to be affected
-            if (DoorsUtils.GetBlacklistedDoors().Any(blacklistedDoor => door.name.StartsWith(blacklistedDoor))) return;
+            if (DoorsUtils.GetBlacklistedDoors().Any(blacklistedDoor => door.name.StartsWith(blacklistedDoor))) return true;
             // Returns if the player has a keycard in their hands
-            if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return;
+            if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return true;
             try
             {
                 // Does a for each on the player's inventory to find the keycard
@@ -36,14 +34,18 @@ namespace RemoteKeycard
                         door.RequiredPermissions.CheckPermissions(keycardItem, player.ReferenceHub))
                     {
                         door.NetworkTargetState = !door.TargetState;
-                        break;
+                        return false;
                     }
+                    return true;
                 }
+                return true;
             }
             catch (Exception e)
             {
                 Log.Debug($"{nameof(OnDoorInteract)}: {e.Message}\n{e.StackTrace}");
             }
+
+            return false;
         }
         
         // Doesn't work because there is no event for PlayerInteractGenerator
@@ -87,18 +89,18 @@ namespace RemoteKeycard
         //}
 
         [PluginEvent(ServerEventType.PlayerInteractLocker)]
-        public void OnLockerInteract(Player player, Locker locker, byte colliderId, bool canOpen)
+        public bool OnLockerInteract(Player player, Locker locker, byte colliderId, bool canOpen)
         {
             // Loads the blacklisted lockers
             SetupBlacklistedLockers();
             // Returns if the config option for affecting lockers is set to false
-            if (!RemoteKeycard.Instance.Config.AffectScpLockers) return;
+            if (!RemoteKeycard.Instance.Config.AffectScpLockers) return true;
             // Returns if the player has a keycard in their hands
-            if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return;
+            if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return true;
             // Returns if the locker is a pedestal, still can't find any way of making it work
-            if (locker is PedestalScpLocker) return;
+            if (locker is PedestalScpLocker) return true;
             // Returns on any blacklisted lockers it finds, this is done to prevent the method from running on lockers that are not supposed to be affected
-            if (LockerUtils.GetBlacklistedLockers().Any(blacklistedLocker => locker.name.Contains(blacklistedLocker))) return;
+            if (LockerUtils.GetBlacklistedLockers().Any(blacklistedLocker => locker.name.Contains(blacklistedLocker))) return true;
             try
             {
                 // Does a for each on the player's inventory to find the keycard
@@ -112,14 +114,19 @@ namespace RemoteKeycard
                         {
                             locker.Chambers[colliderId].SetDoor(!locker.Chambers[colliderId].IsOpen, locker._grantedBeep);
                             locker.RefreshOpenedSyncvar();
+                            return false;
                         }
+                        return true;
                     }
+                    return true;
                 }
+                return true;
             }
             catch (Exception e)
             {
                 Log.Debug($"{nameof(OnLockerInteract)}: {e.Message}\n{e.StackTrace}");
             }
+            return false;
         }
 
         private static void SetupBlacklistedDoors()
