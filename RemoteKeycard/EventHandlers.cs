@@ -46,7 +46,7 @@ namespace RemoteKeycard
             }
             return false;
         }
-
+        
         [PluginEvent(ServerEventType.PlayerInteractLocker)]
         public bool OnLockerInteract(Player player, Locker locker, byte colliderId, bool canOpen)
         {
