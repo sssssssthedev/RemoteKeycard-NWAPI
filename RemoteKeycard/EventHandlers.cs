@@ -44,49 +44,8 @@ namespace RemoteKeycard
             {
                 Log.Debug($"{nameof(OnDoorInteract)}: {e.Message}\n{e.StackTrace}");
             }
-
             return false;
         }
-        
-        // Doesn't work because there is no event for PlayerInteractGenerator
-        //[PluginEvent(ServerEventType.PlayerOpenGenerator)]
-        //public void OnGeneratorUnlock(Player player, Scp079Generator generator)
-        //{
-        //    if (!RemoteKeycard.Instance.Config.AffectGenerators) return;
-        //    
-        //    try
-        //    {
-        //        Log.Debug("[DEBUG] Triggered PlayerOpenGeneratorEvent");
-        //        // Reflection to get requiredPermissions for generator
-        //        Scp079Generator scp079Generator = new Scp079Generator();
-        //        KeycardPermissions requiredPermissions = scp079Generator.GetFieldValue<KeycardPermissions>("_requiredPermissions");
-        //        
-        //        Log.Debug($"Required Permissions: {requiredPermissions}");
-        //        foreach (KeycardItem keycardItem in player.ReferenceHub.inventory.UserInventory.Items.Values)
-        //        {
-        //            Log.Debug($"[DEBUG] Keycards: {keycardItem}");
-        //            if (player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) && keycardItem.Permissions.HasFlagFast(requiredPermissions))
-        //            {
-        //                if (!generator.enabled)
-        //                {
-        //                    generator.Network_flags = 2;
-        //                    Log.Debug("[DEBUG] Generator Network Flag set to 2");
-        //                }
-        //                else
-        //                {
-        //                    generator.Network_flags = 1;
-        //                    Log.Debug("[DEBUG] Generator Network Flag set to 1");
-        //                }
-        //            }
-        //        }
-                
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Log.Debug($"{nameof(OnGeneratorUnlock)}: {e.Message}\n{e.StackTrace}");
-        //    }
-        //}
 
         [PluginEvent(ServerEventType.PlayerInteractLocker)]
         public bool OnLockerInteract(Player player, Locker locker, byte colliderId, bool canOpen)
