@@ -97,8 +97,6 @@ namespace RemoteKeycard
             if (!RemoteKeycard.Instance.Config.AffectScpLockers) return true;
             // Returns if the player has a keycard in their hands
             if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return true;
-            // Returns if the locker is a pedestal, still can't find any way of making it work
-            if (locker is PedestalScpLocker) return true;
             // Returns on any blacklisted lockers it finds, this is done to prevent the method from running on lockers that are not supposed to be affected
             if (LockerUtils.GetBlacklistedLockers().Any(blacklistedLocker => locker.name.Contains(blacklistedLocker))) return true;
             try
