@@ -36,9 +36,7 @@ namespace RemoteKeycard
                         door.NetworkTargetState = !door.TargetState;
                         return false;
                     }
-                    return true;
                 }
-                return true;
             }
             catch (Exception e)
             {
@@ -73,11 +71,8 @@ namespace RemoteKeycard
                             locker.RefreshOpenedSyncvar();
                             return false;
                         }
-                        return true;
                     }
-                    return true;
                 }
-                return true;
             }
             catch (Exception e)
             {
