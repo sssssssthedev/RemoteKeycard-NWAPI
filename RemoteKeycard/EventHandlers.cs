@@ -42,7 +42,8 @@ namespace RemoteKeycard
             {
                 Log.Debug($"{nameof(OnDoorInteract)}: {e.Message}\n{e.StackTrace}");
             }
-            return false;
+
+            return true;
         }
         
         [PluginEvent(ServerEventType.PlayerInteractLocker)]
@@ -78,7 +79,8 @@ namespace RemoteKeycard
             {
                 Log.Debug($"{nameof(OnLockerInteract)}: {e.Message}\n{e.StackTrace}");
             }
-            return false;
+
+            return true;
         }
 
         private static void SetupBlacklistedDoors()
