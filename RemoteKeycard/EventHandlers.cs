@@ -47,7 +47,7 @@ namespace RemoteKeycard
         }
         
         [PluginEvent(ServerEventType.PlayerInteractLocker)]
-        public bool OnLockerInteract(Player player, Locker locker, byte colliderId, bool canOpen)
+        public bool OnLockerInteract(Player player, Locker locker, LockerChamber lockerChamber, bool canOpen)
         {
             // Loads the blacklisted lockers
             SetupBlacklistedLockers();
@@ -66,9 +66,9 @@ namespace RemoteKeycard
                     if (item is KeycardItem keycardItem) {
                         // If the player has a keycard in their inventory and the locker permissions match the keycard, open the locker
                         if (player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) &&
-                            keycardItem.Permissions.HasFlagFast(locker.Chambers[colliderId].RequiredPermissions))
+                            keycardItem.Permissions.HasFlagFast(lockerChamber.RequiredPermissions))
                         {
-                            locker.Chambers[colliderId].SetDoor(!locker.Chambers[colliderId].IsOpen, locker._grantedBeep);
+                            lockerChamber.SetDoor(!lockerChamber.IsOpen, locker._grantedBeep);
                             locker.RefreshOpenedSyncvar();
                             return false;
                         }
