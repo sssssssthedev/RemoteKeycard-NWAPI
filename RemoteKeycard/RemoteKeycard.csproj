@@ -39,7 +39,7 @@
           <HintPath>..\..\..\Desktop\SCPPublicBetaSourceReferences\Assembly-CSharp-Publicized.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass">
-          <HintPath>..\..\..\Desktop\SCPPublicBetaReferences\Assembly-CSharp-firstpass.dll</HintPath>
+          <HintPath>..\..\..\Desktop\SCPPublicBetaSourceReferences\Assembly-CSharp-firstpass.dll</HintPath>
         </Reference>
         <Reference Include="Microsoft.CodeAnalysis, Version=3.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
           <HintPath>..\packages\Microsoft.CodeAnalysis.Common.3.3.1\lib\netstandard2.0\Microsoft.CodeAnalysis.dll</HintPath>
@@ -55,7 +55,7 @@
           <HintPath>..\packages\Northwood.PluginAPI.Analyzers.12.0.0-rc.5\lib\netstandard2.0\NwPluginAPI.Analyzers.dll</HintPath>
         </Reference>
         <Reference Include="PluginAPI, Version=12.0.0.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\Northwood.PluginAPI.12.0.0-rc.5\lib\net48\PluginAPI.dll</HintPath>
+          <HintPath>..\packages\Northwood.PluginAPI.12.0.0-rc.6\lib\net48\PluginAPI.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">

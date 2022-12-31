@@ -42,7 +42,39 @@ namespace RemoteKeycard
             {
                 Log.Debug($"{nameof(OnDoorInteract)}: {e.Message}\n{e.StackTrace}");
             }
-
+            return true;
+        }
+        
+        [PluginEvent(ServerEventType.PlayerInteractGenerator)]
+        public bool OnGeneratorInteract(Player player, Scp079Generator generator, Scp079Generator.GeneratorColliderId generatorColliderId)
+        { 
+            if (!RemoteKeycard.Instance.Config.AffectGenerators) return true;
+            if (player.ReferenceHub.inventory.CurInstance is KeycardItem) return true;
+            try
+            {
+                foreach (var item in player.ReferenceHub.inventory.UserInventory.Items.Values) 
+                {
+                    if (item is KeycardItem keycardItem)
+                    {
+                        if (player.ReferenceHub.inventory.UserInventory.Items.ContainsValue(keycardItem) &&
+                            keycardItem.Permissions.HasFlagFast(generator._requiredPermission))
+                        {
+                            if (generatorColliderId == Scp079Generator.GeneratorColliderId.Door)
+                            {
+                                if (!generator.HasFlag(generator._flags, Scp079Generator.GeneratorFlags.Unlocked))
+                                {
+                                    generator.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, !generator.HasFlag(generator._flags, Scp079Generator.GeneratorFlags.Unlocked));
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e) 
+            { 
+                Log.Debug($"{nameof(OnGeneratorInteract)}: {e.Message}\n{e.StackTrace}"); 
+            }
             return true;
         }
         
@@ -79,7 +111,6 @@ namespace RemoteKeycard
             {
                 Log.Debug($"{nameof(OnLockerInteract)}: {e.Message}\n{e.StackTrace}");
             }
-
             return true;
         }
 
