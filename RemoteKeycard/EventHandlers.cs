@@ -18,6 +18,8 @@ namespace RemoteKeycard
         {
             // Loads the blacklisted doors
             SetupBlacklistedDoors();
+            //Avoid opening locked door
+            if (door.ActiveLocks > 0) return false;
             // Returns if the config option for affecting doors is set to false
             if (!RemoteKeycard.Instance.Config.AffectDoors) return true;
             // Returns on any blacklisted doors it finds, this is done to prevent the method from running on doors that are not supposed to be affected
